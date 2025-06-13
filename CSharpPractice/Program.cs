@@ -53,16 +53,16 @@ void StartGame(string text)
 {
     Console.Write(text);
     int playersChoice = Convert.ToInt32(Console.ReadLine());
-    GamePlay("Player 2, it is your turn.", playersChoice);
+    string message = GamePlay("Player 2, it is your turn.", playersChoice);
+    Console.WriteLine(message);
 }
 
-void GamePlay(string text, int playersChoice)
+string GamePlay(string text, int playersChoice)
 {
     // Gameplay variables
     int round = 1;
     int cityHealth = 15;
     int manticore = 10;
-    int damage = 1;
 
     Console.WriteLine(text);
     Console.WriteLine(new string('-', 30)); // 30 dashes
@@ -70,25 +70,15 @@ void GamePlay(string text, int playersChoice)
     // Calculate the damage each round
     int CalculateDamage(int round)
     {
-        if (round % 3 == 0 & round % 5 == 0)
-        {
-            damage = 10;
-            return damage;
-        }
-        else if (round % 3 == 0 || round % 5 == 0)
-        {
-            damage = 3;
-            return damage;
-        } else
-        {
-            damage = 1;
-            return damage;
-        }
+        if (round % 3 == 0 & round % 5 == 0) return 10;
+        else if (round % 3 == 0 || round % 5 == 0) return 3;
+        return 1;
     }
 
-    while(true)
+    // Game Loop
+    while(manticore > 0 && cityHealth > 0)
     {
-        damage = CalculateDamage(round);
+        int damage = CalculateDamage(round);
 
         Console.WriteLine($"STATUS: Round: {round} City: {cityHealth} Manticore: {manticore}");
         Console.WriteLine($"The canon is expected to deal {damage} damage this round");
@@ -98,21 +88,10 @@ void GamePlay(string text, int playersChoice)
         // Applies damage according to DIRECT HITS and ROUND
         if (player2Choice == playersChoice)
         {
-            if (round % 3 == 0 & round % 5 == 0)
-            {
-                manticore -= damage;
-                Console.WriteLine("Ultimate fire-electric blast DIRECT HIT! K.O!");
-            }
-            else if (round % 3 == 0 || round % 5 == 0)
-            {
-                manticore -= damage;
-                Console.WriteLine("That round was a DIRECT HIT!");
-            }
-            else
-            {
-                manticore -= damage;
-                Console.WriteLine("That round was a DIRECT HIT!");
-            }
+            manticore -= damage;
+            Console.WriteLine(round % 3 == 0 && round % 5 == 0
+                ? "Ultimate fire-electric blast DIRECT HIT! K.O!"
+                : "That round was a DIRECT HIT!");
         }
         else if (player2Choice > playersChoice)
         {
@@ -123,25 +102,20 @@ void GamePlay(string text, int playersChoice)
             Console.WriteLine("That round FELL SHORT of the target.");
         }
 
-        // GAME OVER
-        if (cityHealth <= 0)
-        {
-            Console.Write("The Manticore was victorious! The city of Consolas is destroyed!\nGAME OVER");
-            return;
-        }
-
-        // GAME WON
-        if (manticore <= 0)
-        {
-            Console.WriteLine("The manticore has been destroyed! The city of Consolas has been saved!");
-            return;
-        }
-
         cityHealth--;
         round++;
 
         Console.WriteLine(new string('-', 30)); // 30 dashes
-    } 
+    }
+
+    // End Result
+    string message = manticore switch
+    {
+        <= 0 => "The manticore has been destroyed! The city of Consolas has been saved!\nYOU WON!",
+        _ => "The Manticore was victorious! The city of Consolas is destroyed!\nGAME OVER",
+    };
+
+    return message;
 }
 
 StartGame("Player 1, how far away from the city do you want to station the Manticore? ");
