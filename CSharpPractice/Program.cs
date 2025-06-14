@@ -51,8 +51,11 @@
 // END OF PART CHALLENGE
 void StartGame(string text)
 {
+    // Ask player one for a number
     Console.Write(text);
     int playersChoice = Convert.ToInt32(Console.ReadLine());
+
+    // Store end of game message in a string and display it on the console
     string message = GamePlay("Player 2, it is your turn.", playersChoice);
     Console.WriteLine(message);
 }
@@ -65,7 +68,7 @@ string GamePlay(string text, int playersChoice)
     int manticore = 10;
 
     Console.WriteLine(text);
-    Console.WriteLine(new string('-', 30)); // 30 dashes
+    Console.WriteLine(new string('-', 50)); // 50 dashes
 
     // Calculate the damage each round
     int CalculateDamage(int round)
@@ -105,7 +108,7 @@ string GamePlay(string text, int playersChoice)
         cityHealth--;
         round++;
 
-        Console.WriteLine(new string('-', 30)); // 30 dashes
+        Console.WriteLine(new string('-', 50)); // 30 dashes
     }
 
     // End Result
