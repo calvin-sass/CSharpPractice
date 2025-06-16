@@ -107,94 +107,126 @@
 //    Sweet
 //}
 
-// Classes
+//Classes
 float customizeArrow()
 {
-    while(true)
+    while (true)
     {
         string arrowChoice, fletchlingChoice;
         int shaftChoice;
         ArrowHead arrowHead = default;
         Fletchling fletchling = default;
         Shaft shaft = default;
+        Arrow arrow = new Arrow(arrowHead, fletchling, shaft);
 
-        // Choose an Arrow
-        while (true)
+        Console.WriteLine("Choose one arrow from the custom template:");
+        Console.WriteLine("Beginner\nMarksman\nElite");
+        Console.WriteLine("Choose between the options above: type \"beginner\" or any of the other options");
+        Console.WriteLine("Type \"custom\" if you want to make a custom arrow.");
+        string choice = Console.ReadLine();
+
+        if (choice.ToLower() == "beginner")
         {
-            Console.WriteLine("Pick an Arrow Head");
-            Console.WriteLine("Steel, Wood or Obsidian?");
-            arrowChoice = Console.ReadLine();
-            if (arrowChoice.ToLower() == "steel")
+            Arrow beginnerArrow = Arrow.CreateBeginnerArrow();
+            float beginnerCost = beginnerArrow.GetCost();
+            return beginnerCost;
+        }
+
+        if (choice.ToLower() == "marksman")
+        {
+            Arrow marksmanArrow = Arrow.CreateMarksmanArrow();
+            float marksmanCost = marksmanArrow.GetCost();
+            return marksmanCost;
+        }
+
+        if (choice.ToLower() == "elite")
+        {
+            Arrow eliteArrow = Arrow.CreateEliteArrow();
+            float eliteCost = eliteArrow.GetCost();
+            return eliteCost;
+        }
+
+        // Create a custom arrow
+        if (choice.ToLower() == "custom")
+        {
+            // Choose an Arrow
+            while (true)
             {
-                arrowHead = ArrowHead.Steel;
-                break;
+                Console.WriteLine("Pick an Arrow Head");
+                Console.WriteLine("Steel, Wood or Obsidian?");
+                arrowChoice = Console.ReadLine();
+                if (arrowChoice.ToLower() == "steel")
+                {
+                    arrow.ArrowHead = ArrowHead.Steel;
+                    break;
+                }
+                else if (arrowChoice.ToLower() == "wood")
+                {
+                    arrow.ArrowHead = ArrowHead.Wood;
+                    break;
+                }
+                else if (arrowChoice.ToLower() == "obsidian")
+                {
+                    arrow.ArrowHead = ArrowHead.Obsidian;
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid Option.");
+                }
             }
-            else if (arrowChoice.ToLower() == "wood")
+
+            // Choose Fletchling
+            while (true)
             {
-                arrowHead = ArrowHead.Wood;
-                break;
+                Console.WriteLine("Pick an Arrow Fletchling");
+                Console.WriteLine("Plastic, Turkey Feathers or Goose Feathers?");
+                fletchlingChoice = Console.ReadLine();
+                if (fletchlingChoice.ToLower().Trim() == "plastic")
+                {
+                    arrow.Fletchling = Fletchling.Plastic;
+                    break;
+                }
+                else if (fletchlingChoice.ToLower().Trim() == "turkey feathers")
+                {
+                    arrow.Fletchling = Fletchling.TurkeyFeathers;
+                    break;
+                }
+                else if (fletchlingChoice.ToLower().Trim() == "goose feathers")
+                {
+                    arrow.Fletchling = Fletchling.GooseFeathers;
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid Option.");
+                }
             }
-            else if (arrowChoice.ToLower() == "obsidian")
+
+            // Choose a Shaft
+            while (true)
             {
-                arrowHead = ArrowHead.Obsidian;
-                break;
-            }
-            else
-            {
-                Console.WriteLine("Invalid Option.");
+                Console.WriteLine("Pick an Arrow Shaft Lenght");
+                Console.WriteLine("60 or 100?");
+                shaftChoice = Convert.ToInt32(Console.ReadLine());
+                if (shaftChoice == 60)
+                {
+                    arrow.Length = Shaft.Short;
+                    break;
+                }
+                else if (shaftChoice == 100)
+                {
+                    arrow.Length = Shaft.Long;
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid Option.");
+                }
             }
         }
 
-        // Choose Fletchling
-        while (true)
-        {
-            Console.WriteLine("Pick an Arrow Fletchling");
-            Console.WriteLine("Plastic, Turkey Feathers or Goose Feathers?");
-            fletchlingChoice = Console.ReadLine();
-            if (fletchlingChoice.ToLower().Trim() == "plastic")
-            {
-                fletchling = Fletchling.Plastic;
-                break;
-            }
-            else if (fletchlingChoice.ToLower().Trim() == "turkey feathers")
-            {
-                fletchling = Fletchling.TurkeyFeathers;
-                break;
-            }
-            else if (fletchlingChoice.ToLower().Trim() == "goose feathers")
-            {
-                fletchling = Fletchling.GooseFeathers;
-                break;
-            } else
-            {
-                Console.WriteLine("Invalid Option.");
-            }
-        }
-
-        // Choose a Shaft
-        while (true)
-        {
-            Console.WriteLine("Pick an Arrow Shaft Lenght");
-            Console.WriteLine("60 or 100?");
-            shaftChoice = Convert.ToInt32(Console.ReadLine());
-            if (shaftChoice == 60)
-            {
-                shaft = Shaft.Short;
-                break;
-            }
-            else if (shaftChoice == 100)
-            {
-                shaft = Shaft.Long;
-                break;
-            } else
-            {
-                Console.WriteLine("Invalid Option.");
-            }
-        }
-
-        Arrow newArrow = new Arrow(arrowHead, fletchling, shaft);
-
-        float cost = newArrow.GetCost();
+        float cost = arrow.GetCost();
 
         return cost;
     }
@@ -207,32 +239,59 @@ Console.WriteLine($"You arrow will cost roughly {cost} gold");
 
 class Arrow
 {
-    ArrowHead arrowHead;
-    Fletchling fletchling;
-    Shaft length;
+    public ArrowHead ArrowHead { get; set; }
+    public Fletchling Fletchling { get; set; }
+    public Shaft Length { get; set; }
 
     public Arrow(ArrowHead arrowHead, Fletchling fletchling, Shaft length)
     {
-        this.arrowHead = arrowHead;
-        this.fletchling = fletchling;
-        this.length = length;
+        ArrowHead = arrowHead;
+        Fletchling = fletchling;
+        Length = length;
+    }
+
+    public static Arrow CreateEliteArrow()
+    {
+        ArrowHead arrowHead = ArrowHead.Steel;
+        Fletchling fletchling = Fletchling.Plastic;
+        Shaft length = Shaft.Elite;
+
+        return new Arrow(arrowHead, fletchling, length);
+    }
+
+    public static Arrow CreateBeginnerArrow()
+    {
+        ArrowHead arrowHead = ArrowHead.Wood;
+        Fletchling fletchling = Fletchling.GooseFeathers;
+        Shaft length = Shaft.Beginner;
+
+        return new Arrow(arrowHead, fletchling, length);
+    }
+
+    public static Arrow CreateMarksmanArrow()
+    {
+        ArrowHead arrowHead = ArrowHead.Steel;
+        Fletchling fletchling = Fletchling.GooseFeathers;
+        Shaft length = Shaft.Marksman;
+
+        return new Arrow(arrowHead, fletchling, length);
     }
 
     public float GetCost()
     {
         float cost = 0;
 
-        if (arrowHead == ArrowHead.Steel) cost += 10;
-        if (arrowHead == ArrowHead.Wood) cost += 3;
-        if (arrowHead == ArrowHead.Obsidian) cost += 5;
+        if (ArrowHead == ArrowHead.Steel) cost += 10;
+        if (ArrowHead == ArrowHead.Wood) cost += 3;
+        if (ArrowHead == ArrowHead.Obsidian) cost += 5;
 
-        if (fletchling == Fletchling.Plastic) cost += 10;
-        if (fletchling == Fletchling.TurkeyFeathers) cost += 5;
-        if (fletchling == Fletchling.GooseFeathers) cost += 3;
+        if (Fletchling == Fletchling.Plastic) cost += 10;
+        if (Fletchling == Fletchling.TurkeyFeathers) cost += 5;
+        if (Fletchling == Fletchling.GooseFeathers) cost += 3;
 
-        if (length == Shaft.Long)
+        if (Length == Shaft.Long)
             cost += (float)Shaft.Long * 0.05f;
-        else if (length == Shaft.Short)
+        else if (Length == Shaft.Short)
             cost += (float)Shaft.Short * 0.05f;
 
         return cost;
@@ -249,7 +308,10 @@ enum ArrowHead
 enum Shaft
 {
     Long = 100,
-    Short = 60
+    Short = 60,
+    Beginner = 75,
+    Marksman = 65,
+    Elite = 95,
 }
 
 enum Fletchling
@@ -258,4 +320,7 @@ enum Fletchling
     TurkeyFeathers,
     GooseFeathers
 }
+
+
+
 
